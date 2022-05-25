@@ -1,0 +1,12 @@
+enum aa
+- BB
+- CC
+
+table nameaaa
+- id varchar primarykey default=true
+- name varchar nullable
+- item aa
+- item cc.id
+
+table X
+- id rio
