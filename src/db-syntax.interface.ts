@@ -18,7 +18,7 @@ export interface ObjectGrammarTableOptionsDefaultValue {
 
 export interface ObjectGrammarTableItemPrimitive extends ObjectGrammarTableOptionsDefaultValue {
   type: 'primitive'
-  variable: MooValue
+  column: MooValue
   data_type: MooValue
 }
 
