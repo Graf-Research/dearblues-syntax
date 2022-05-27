@@ -4,7 +4,7 @@
   "description": "Dearblues syntax grammar",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node -O '{\"module\":\"commonjs\"}' src/main",
+    "test": "ts-node -O '{\"module\":\"commonjs\"}' src/test",
     "compile-grammar": "mkdir -p grammar/compiled && nearleyc grammar/db-syntax.ne -o grammar/compiled/db-syntax.js"
   },
   "author": "Rio",
