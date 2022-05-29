@@ -7,8 +7,7 @@
     "compile-grammar": "mkdir -p grammar/compiled && nearleyc grammar/db-syntax.ne -o grammar/compiled/db-syntax.js"
   },
   "author": "Rio",
-  "main": "./src/index.ts",
-  "types": "./src/db-syntax.interface.ts",
+  "types": "./specs.d.ts",
   "license": "ISC",
   "devDependencies": {
     "@types/nearley": "^2.11.2",
