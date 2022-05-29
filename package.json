@@ -2,12 +2,12 @@
   "name": "dearblues-syntax",
   "version": "1.0.0",
   "description": "Dearblues syntax grammar",
-  "main": "index.js",
   "scripts": {
     "test": "ts-node -O '{\"module\":\"commonjs\"}' src/test",
     "compile-grammar": "mkdir -p grammar/compiled && nearleyc grammar/db-syntax.ne -o grammar/compiled/db-syntax.js"
   },
   "author": "Rio",
+  "main": "./src/index.ts",
   "types": "./src/db-syntax.interface.ts",
   "license": "ISC",
   "devDependencies": {
