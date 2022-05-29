@@ -1,4 +1,4 @@
-import nearley from "nearley";
+import * as nearley from "nearley";
 import { ObjectGrammar } from "./db-syntax.interface";
 import { performStaticChecks } from "./static-analytic";
 

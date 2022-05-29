@@ -4,10 +4,11 @@
   "description": "Dearblues syntax grammar",
   "scripts": {
     "test": "ts-node -O '{\"module\":\"commonjs\"}' src/test",
-    "compile-grammar": "mkdir -p grammar/compiled && nearleyc grammar/db-syntax.ne -o grammar/compiled/db-syntax.js"
+    "compile-grammar": "mkdir -p grammar/compiled && nearleyc grammar/db-syntax.ne -o grammar/compiled/db-syntax.js",
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "author": "Rio",
-  "types": "./specs.d.ts",
   "license": "ISC",
   "devDependencies": {
     "@types/nearley": "^2.11.2",
@@ -18,5 +19,8 @@
   },
   "dependencies": {
     "moo": "^0.5.1"
-  }
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": ["lib/**/*"]
 }
