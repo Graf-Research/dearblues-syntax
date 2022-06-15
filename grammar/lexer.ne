@@ -54,7 +54,8 @@ const lexer = moo.compile({
     })
   },
   item_begin: /[\-]/,
-  equals: /[\=]/
+  equals: /[\=]/,
+  any: /.+/
 });
 %}
 

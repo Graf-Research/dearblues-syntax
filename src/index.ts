@@ -12,9 +12,16 @@ export class DearbluesParser {
 
   public parse(code: string): ObjectGrammar[] {
     try {
+      if (!code.trim()) {
+        return [];
+      }
+
       this.parser.feed(code.trim());
 
       const res: ObjectGrammar[] = this.parser.results[0];
+      if (!res) {
+        throw new Error(`Syntax error at line ${code.split('\n').length}`);
+      }
       performStaticChecks(res);
       const total = {
         table: res.reduce((acc, curr) => acc + (curr.type === 'table' ? 1 : 0), 0),

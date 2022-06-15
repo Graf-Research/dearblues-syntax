@@ -58,7 +58,8 @@ const lexer = moo.compile({
     })
   },
   item_begin: /[\-]/,
-  equals: /[\=]/
+  equals: /[\=]/,
+  any: /.+/
 });
 var grammar = {
     Lexer: lexer,
@@ -75,7 +76,9 @@ var grammar = {
     {"name": "enum_header", "symbols": [(lexer.has("keywords_enum") ? {type: "keywords_enum"} : keywords_enum), (lexer.has("ws") ? {type: "ws"} : ws), (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": d => d[2]},
     {"name": "enum_items", "symbols": ["enum_items", (lexer.has("nl") ? {type: "nl"} : nl), "enum_item"], "postprocess": d => [...d[0], d[2]]},
     {"name": "enum_items", "symbols": ["enum_item"]},
-    {"name": "enum_item", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "_ws_", (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": d => d[2]},
+    {"name": "enum_item$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "enum_item$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "enum_item", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "enum_item$ebnf$1", (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess": d => d[2]},
     {"name": "table", "symbols": ["table_header", (lexer.has("nl") ? {type: "nl"} : nl), "table_items"], "postprocess":  d => ({
           type: 'table',
           name: d[0],
@@ -104,17 +107,23 @@ var grammar = {
     {"name": "table_item_clean", "symbols": ["table_item_reference"], "postprocess": id},
     {"name": "table_item_clean", "symbols": ["table_item_enum"], "postprocess": id},
     {"name": "table_item_clean", "symbols": ["table_item_primitive"], "postprocess": id},
-    {"name": "table_item_reference", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "_ws_", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), "fk_access"], "postprocess":  d => ({
+    {"name": "table_item_reference$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_item_reference$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_item_reference", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "table_item_reference$ebnf$1", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), "fk_access"], "postprocess":  d => ({
           type: 'reference',
           column: d[2],
           reference: d[4]
         }) },
-    {"name": "table_item_enum", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "_ws_", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess":  d => ({
+    {"name": "table_item_enum$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_item_enum$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_item_enum", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "table_item_enum$ebnf$1", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), (lexer.has("variable") ? {type: "variable"} : variable)], "postprocess":  d => ({
           type: 'enum',
           column: d[2],
           enum: d[4]
         }) },
-    {"name": "table_item_primitive", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "_ws_", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), (lexer.has("keywords_data_type") ? {type: "keywords_data_type"} : keywords_data_type)], "postprocess":  d => ({
+    {"name": "table_item_primitive$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_item_primitive$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_item_primitive", "symbols": [(lexer.has("item_begin") ? {type: "item_begin"} : item_begin), "table_item_primitive$ebnf$1", (lexer.has("variable") ? {type: "variable"} : variable), (lexer.has("ws") ? {type: "ws"} : ws), (lexer.has("keywords_data_type") ? {type: "keywords_data_type"} : keywords_data_type)], "postprocess":  d => ({
           type: 'primitive',
           column: d[2],
           data_type: d[4]
@@ -123,9 +132,17 @@ var grammar = {
           table: d[0],
           column: d[2]
         }) },
-    {"name": "table_options", "symbols": ["table_options", "_ws_", (lexer.has("comma") ? {type: "comma"} : comma), "_ws_", (lexer.has("keywords_options") ? {type: "keywords_options"} : keywords_options)], "postprocess": d => [...d[0], d[4]]},
+    {"name": "table_options$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_options$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_options$ebnf$2", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_options$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_options", "symbols": ["table_options", "table_options$ebnf$1", (lexer.has("comma") ? {type: "comma"} : comma), "table_options$ebnf$2", (lexer.has("keywords_options") ? {type: "keywords_options"} : keywords_options)], "postprocess": d => [...d[0], d[4]]},
     {"name": "table_options", "symbols": [(lexer.has("keywords_options") ? {type: "keywords_options"} : keywords_options)]},
-    {"name": "table_dv", "symbols": [(lexer.has("keywords_default") ? {type: "keywords_default"} : keywords_default), "_ws_", (lexer.has("equals") ? {type: "equals"} : equals), "_ws_", "table_dv_value"], "postprocess": d => d[4]},
+    {"name": "table_dv$ebnf$1", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_dv$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_dv$ebnf$2", "symbols": [(lexer.has("ws") ? {type: "ws"} : ws)], "postprocess": id},
+    {"name": "table_dv$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "table_dv", "symbols": [(lexer.has("keywords_default") ? {type: "keywords_default"} : keywords_default), "table_dv$ebnf$1", (lexer.has("equals") ? {type: "equals"} : equals), "table_dv$ebnf$2", "table_dv_value"], "postprocess": d => d[4]},
     {"name": "table_dv_value", "symbols": [(lexer.has("string") ? {type: "string"} : string)], "postprocess":  d => ({
           type: 'string',
           value: d[0]
@@ -137,10 +154,7 @@ var grammar = {
     {"name": "table_dv_value", "symbols": [(lexer.has("number") ? {type: "number"} : number)], "postprocess":  d => ({
           type: 'number',
           value: d[0]
-        }) },
-    {"name": "_ws_$ebnf$1", "symbols": []},
-    {"name": "_ws_$ebnf$1", "symbols": ["_ws_$ebnf$1", {"literal":" "}], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "_ws_", "symbols": ["_ws_$ebnf$1"]}
+        }) }
 ]
   , ParserStart: "___MAIN___"
 }
